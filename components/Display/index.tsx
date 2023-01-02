@@ -1,6 +1,6 @@
 import styles from "./style.module.css";
 
-const Display = ( {content} ) => {
+const Display = ({ content }) => {
   return (
     <div className={styles.display}>
       {content}
