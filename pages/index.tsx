@@ -49,7 +49,7 @@ const Home = () => {
           }
           return (parseFloat(firstValue) / parseFloat(number)).toString() 
         };
-        if (pressedKey === '=') return prev;
+        if (pressedKey === '=') return prev; 
       }
       if (havePoint && pressedKey === '.') return prev;
 
