@@ -30,35 +30,32 @@ const Home = () => {
     'c',
   ];
   const specialKeyList = ['+', '-', 'x', '/', '=', '.'];
-  console.log('number', number);
-  console.log('firstValue', firstValue);
-  console.log('Special Key ', operation);
-
   const handleClick = (pressedKey) => { 
     setNumber((prev) => {
-      if (pressedKey === 'c') {
+      if (['+', '-', 'x', '/', 'c'].indexOf(pressedKey) > -1) {
         setFirstValue(number);
         setHavePoint(false);
-        setOperation('');
+        setOperation(pressedKey === 'c' ? '' : pressedKey);
         return '';
       }
-      if (['+', '-', 'x', '/'].indexOf(pressedKey) > -1) {
-        setFirstValue(number);
-        setHavePoint(false);
-        setOperation(pressedKey);
-        return '';
-      } 
       if (pressedKey === '=') {
         if (operation === '+') return (parseFloat(firstValue) + parseFloat(number)).toString(); 
         if (operation === '-') return (parseFloat(firstValue) - parseFloat(number)).toString();
         if (operation === 'x') return (parseFloat(firstValue) * parseFloat(number)).toString();
-        if (operation === '/') return (parseFloat(firstValue) / parseFloat(number)).toString();
-      }
-      if (pressedKey === '.' && !havePoint) {
-        setHavePoint(true);
-        return prev + pressedKey;
+        if (operation === '/') { 
+          if (parseFloat(number) < 1) {
+            alert('O divisor não pode ser menor que 1');
+            return '';
+          }
+          return (parseFloat(firstValue) / parseFloat(number)).toString() 
+        };
+        if (pressedKey === '=') return prev;
       }
       if (havePoint && pressedKey === '.') return prev;
+
+      if (pressedKey === '.' && !havePoint) {
+        setHavePoint(true);
+      }
       return prev + pressedKey;
     });  
   };
