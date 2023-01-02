@@ -1,65 +1,82 @@
-import Head from 'next/head'
-import Image from 'next/image'
+import { useState } from 'react';
 
-import styles from '@/pages/index.module.css'
+import Button from "../components/Button/index";
+import Display from "../components/Display/index";
 
-export default function Home() {
+import styles from "./index.module.css";
+
+const Home = () => {
+  const [number, setNumber] = useState('');
+  const [havePoint, setHavePoint] = useState(false);  
+  const [firstValue, setFirstValue] = useState('');
+  const [operation, setOperation] = useState('');
+  const buttons = [
+    '7',
+    '8',
+    '9',
+    '/',
+    '4',
+    '5',
+    '6',
+    'x',
+    '1',
+    '2',
+    '3',
+    '-',
+    '0',
+    '.',
+    '+',
+    '=',
+    'c',
+  ];
+  const specialKeyList = ['+', '-', 'x', '/', '=', '.'];
+  console.log('number', number);
+  console.log('firstValue', firstValue);
+  console.log('Special Key ', operation);
+
+  const handleClick = (pressedKey) => { 
+    setNumber((prev) => {
+      if (pressedKey === 'c') {
+        setFirstValue(number);
+        setHavePoint(false);
+        setOperation('');
+        return '';
+      }
+      if (['+', '-', 'x', '/'].indexOf(pressedKey) > -1) {
+        setFirstValue(number);
+        setHavePoint(false);
+        setOperation(pressedKey);
+        return '';
+      } 
+      if (pressedKey === '=') {
+        if (operation === '+') return (parseFloat(firstValue) + parseFloat(number)).toString(); 
+        if (operation === '-') return (parseFloat(firstValue) - parseFloat(number)).toString();
+        if (operation === 'x') return (parseFloat(firstValue) * parseFloat(number)).toString();
+        if (operation === '/') return (parseFloat(firstValue) / parseFloat(number)).toString();
+      }
+      if (pressedKey === '.' && !havePoint) {
+        setHavePoint(true);
+        return prev + pressedKey;
+      }
+      if (havePoint && pressedKey === '.') return prev;
+      return prev + pressedKey;
+    });  
+  };
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a href="https://vercel.com/new" className={styles.card}>
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
-    </div>
+    <main className={styles.main}>
+      <header className={styles.header}>
+        <Display content={number} />
+      </header>
+      <section className={styles.buttonPanel}>
+        {buttons.map((button) =>
+          <Button key={button} value={button} onClick={() => {
+            handleClick(button);
+          }}/>
+        )}
+      </section>
+    </main>
   )
 }
+
+export default Home;
